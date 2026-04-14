@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>西郊资本记账台</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./assets/config.js"></script>
+    <script type="module" src="./assets/app.js"></script>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="eyebrow">Xijiao Capital</div>
+          <h1>记账台</h1>
+          <p>Supabase 版私有投资后台</p>
+        </div>
+
+        <div id="session-panel" class="card hidden">
+          <div class="section-label">当前登录</div>
+          <div id="session-name" class="session-name"></div>
+          <div id="session-role" class="session-role"></div>
+          <button id="logout-button" class="ghost-button">退出登录</button>
+        </div>
+
+        <div class="card hint-card">
+          <div class="section-label">说明</div>
+          <p>账户创建与密码重置建议在 Supabase Auth 后台完成。这里负责登录、查看、录入和管理员修订交易。</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section id="auth-view" class="view">
+          <div class="hero-card">
+            <div class="eyebrow">Supabase Ledger</div>
+            <h2>登录后进入投资记录控制台</h2>
+            <p>普通账户可查看并新增自己的记录，超级管理员可统一查看与修订全部账户。</p>
+          </div>
+
+          <form id="login-form" class="card form-grid">
+            <h3>账户登录</h3>
+            <label>
+              <span>邮箱</span>
+              <input id="email" type="email" placeholder="name@example.com" required />
+            </label>
+            <label>
+              <span>密码</span>
+              <input id="password" type="password" placeholder="请输入密码" required />
+            </label>
+            <button type="submit">登录</button>
+            <p class="muted">如果需要新建账户或重置密码，请使用 Supabase 控制台处理。</p>
+          </form>
+        </section>
+
+        <section id="app-view" class="view hidden">
+          <div class="hero-card">
+            <div class="eyebrow">Workspace</div>
+            <h2 id="hero-title">投资记录</h2>
+            <p id="hero-subtitle">正在加载账户信息...</p>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="metric-label">记录笔数</div>
+              <div id="metric-records" class="metric-value">0</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">当前持仓</div>
+              <div id="metric-holdings" class="metric-value">0</div>
+            </div>
+            <div class="metric">
+              <div class="metric-label">现金余额</div>
+              <div id="metric-balances" class="metric-value">0</div>
+            </div>
+          </div>
+
+          <section id="admin-toolbar" class="card hidden">
+            <div class="toolbar-row">
+              <div>
+                <div class="section-label">管理员视角</div>
+                <h3>切换管理账户</h3>
+              </div>
+              <select id="account-switcher"></select>
+            </div>
+          </section>
+
+          <div class="content-grid">
+            <section class="card">
+              <h3 id="record-form-title">新增记录</h3>
+              <form id="record-form" class="form-grid">
+                <label>
+                  <span>日期</span>
+                  <input id="record-date" type="date" required />
+                </label>
+                <label>
+                  <span>操作说明</span>
+                  <input id="record-title" type="text" placeholder="例如：买入 100 股 小鹏汽车" required />
+                </label>
+                <label>
+                  <span>价格 / 金额</span>
+                  <input id="record-detail" type="text" placeholder="例如：22.58 USD/股，共计 2258 USD" />
+                </label>
+                <label>
+                  <span>备注</span>
+                  <textarea id="record-note" rows="4" placeholder="补充手续费、汇率、说明"></textarea>
+                </label>
+                <label>
+                  <span>更新后的持仓</span>
+                  <textarea id="record-holdings" rows="6" placeholder="每行一条，例如：持仓 100股 小鹏汽车(XPEV)"></textarea>
+                </label>
+                <label>
+                  <span>更新后的余额</span>
+                  <textarea id="record-balances" rows="6" placeholder="每行一条，例如：余额 USD 679.59 in 富途"></textarea>
+                </label>
+                <button type="submit">保存记录</button>
+              </form>
+            </section>
+
+            <section class="card">
+              <h3>当前持仓与余额</h3>
+              <div class="panel-block">
+                <div class="section-label">持仓</div>
+                <ul id="current-holdings" class="plain-list"></ul>
+              </div>
+              <div class="panel-block">
+                <div class="section-label">余额</div>
+                <ul id="current-balances" class="plain-list"></ul>
+              </div>
+            </section>
+          </div>
+
+          <section class="card">
+            <div class="toolbar-row">
+              <div>
+                <div class="section-label">流水</div>
+                <h3>投资记录</h3>
+              </div>
+            </div>
+            <div id="records-list" class="records-list"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+  </body>
+</html>
